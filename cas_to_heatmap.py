@@ -118,6 +118,16 @@ def merge_data(assembly_data, mapping_data):
 			sys.exit("ERROR : " + assembly_info + "\n" + mapping_info)
 	return data
 
+def print_to_file(data, field):
+	bucket = {}
+	for dataset in data:
+		bucket[dataset]=[]
+		for line in data[dataset]:
+			bucket[dataset].append("line")
+
+
+
+
 def heatmap(data):
 	plt.rcParams['xtick.major.pad']='50'
 	plt.rcParams['ytick.major.pad']='50'
@@ -175,7 +185,7 @@ def heatmap(data):
 		print gc
 		print n
 		print perc_uncov_sites
-		
+
 		if plot_array == '':
 			plot_array = np.array(array[:,9][sort_idx]).astype(float)
 		else:
@@ -186,7 +196,7 @@ def heatmap(data):
 		#idx = np.empty(len(array))
 		#idx.fill(1)
 		
-		
+	np.savetxt('out_test.txt', (plot_array.T), delimiter='\t', fmt='%.5f')
 	outfile = "sorted_by_size"	
 	x_label = "Contigs ordered by decreasing size"
 		#plt.imshow((contig, perc_uncov_sites), cmap=get_cmap("Spectral"), interpolation=None)
@@ -228,8 +238,8 @@ if __name__ == '__main__':
 		print name
 		cas_data = parse_cas(cas_file)
 		data[name]= merge_data(assembly_data, cas_data)
-	#print length.dtype
 
-	#print np.sort(array, order=['1'])
+	# id, sites, ATGC, N, GC, cov0, cov, cov2, cov3, 0cov/ATGC
+	#print_to_file(data, 9)
 	heatmap(data)
 	
