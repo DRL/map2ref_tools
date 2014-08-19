@@ -138,7 +138,6 @@ def heatmap(data):
 		rows = len(data[dataset])
 		columns += 1
 		names.append(dataset)
-
 	plt.figure(1, figsize=(100,50), dpi=100)
 
 	plot_array = ''
@@ -147,9 +146,9 @@ def heatmap(data):
 		print dataset
 		array = np.array(data[dataset])
 		#value = np.array(array[:,0]).astype(str)
-		#value = np.array(array[:,1]).astype(int) # length
+		value = np.array(array[:,1]).astype(int) # length
 		#value = np.array(array[:,2]).astype(int) # ATGCs
-		value = np.array(array[:,3]).astype(int) # N's
+		#value = np.array(array[:,3]).astype(int) # N's
 		#value = np.array(array[:,4]).astype(float) # GC
 		#value = np.array(array[:,5]).astype(int) # cov0's
 		#value = np.array(array[:,9]).astype(float) # 0cov/ATGC
@@ -157,9 +156,9 @@ def heatmap(data):
 		sort_idx = sort_idx[::-1]
 
 		#outfile = "sorted_by_uncov_sites"
-		outfile = "sorted_by_n"
+		
 		#x_label = " Contigs ordered by decreasing unmapped nuc's"
-		x_label = "Contigs ordered by decreasing N"
+		
 
 		contig_id = np.array(array[:,0][sort_idx].astype(str))
 		length = np.array(array[:,1][sort_idx].astype(int))
@@ -168,29 +167,30 @@ def heatmap(data):
 
 		perc_uncov_sites = np.array(array[:,9][sort_idx]).astype(float)
 		
-		#mask_for_cov = np.where(perc_uncov_sites <= 0.50)
-		#perc_uncov_sites[mask_for_cov] = 0.0
+		mask_for_cov = np.where(perc_uncov_sites <= 0.0)
+		perc_uncov_sites[mask_for_cov] = 0.0
 
 		print contig_id	
 		print length
 		print gc
 		print n
 		print perc_uncov_sites
-
+		
 		if plot_array == '':
 			plot_array = np.array(array[:,9][sort_idx]).astype(float)
 		else:
 			plot_array = np.vstack((perc_uncov_sites, plot_array))
 		
-
+		print plot_array.shape
 		#contig = np.arange(len(array))
 		#idx = np.empty(len(array))
 		#idx.fill(1)
 		
 		
-		
+	outfile = "sorted_by_size"	
+	x_label = "Contigs ordered by decreasing size"
 		#plt.imshow((contig, perc_uncov_sites), cmap=get_cmap("Spectral"), interpolation=None)
-	extent = [1, columns, 1, rows]
+	#extent = [1, columns, 1, rows]
 	#plt.imshow(plot_array, cmap=get_cmap("jet"), aspect='auto', interpolation='none')
 	plt.imshow(plot_array, cmap=get_cmap("gnuplot"), aspect='auto', interpolation='none')
 	#plt.imshow(plot_array, cmap=get_cmap("afmhot_r"), aspect='auto', interpolation='none')
@@ -205,7 +205,7 @@ def heatmap(data):
 	plt.xticks( fontsize=75)
 	plt.xlabel(x_label, fontsize=75)
 	#plt.grid(which='minor', axis='y', color=white)
-	plt.savefig(outfile + ".png", format='png')
+	plt.savefig(assembly_file + "." + outfile + ".png", format='png')
 	plt.close()
 	# Format
 	
