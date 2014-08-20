@@ -156,9 +156,9 @@ def heatmap(data):
 		print dataset
 		array = np.array(data[dataset])
 		#value = np.array(array[:,0]).astype(str)
-		value = np.array(array[:,1]).astype(int) # length
+		#value = np.array(array[:,1]).astype(int) # length
 		#value = np.array(array[:,2]).astype(int) # ATGCs
-		#value = np.array(array[:,3]).astype(int) # N's
+		value = np.array(array[:,3]).astype(int) # N's
 		#value = np.array(array[:,4]).astype(float) # GC
 		#value = np.array(array[:,5]).astype(int) # cov0's
 		#value = np.array(array[:,9]).astype(float) # 0cov/ATGC
@@ -187,18 +187,21 @@ def heatmap(data):
 		print perc_uncov_sites
 
 		if plot_array == '':
+			n_array = np.array(array[:,3][sort_idx].astype(int))
 			plot_array = np.array(array[:,9][sort_idx]).astype(float)
 		else:
-			plot_array = np.vstack((perc_uncov_sites, plot_array))
+			n_array = np.vstack((n_array,n))
+			plot_array = np.vstack((plot_array,perc_uncov_sites))
 		
 		print plot_array.shape
 		#contig = np.arange(len(array))
 		#idx = np.empty(len(array))
 		#idx.fill(1)
-		
+	
+	np.savetxt('n_array.txt', (n_array.T), delimiter='\t', fmt='%i')
 	np.savetxt('out_test.txt', (plot_array.T), delimiter='\t', fmt='%.5f')
-	outfile = "sorted_by_size"	
-	x_label = "Contigs ordered by decreasing size"
+	outfile = "sorted_by_N"	
+	x_label = "Contigs ordered by decreasing N"
 		#plt.imshow((contig, perc_uncov_sites), cmap=get_cmap("Spectral"), interpolation=None)
 	#extent = [1, columns, 1, rows]
 	#plt.imshow(plot_array, cmap=get_cmap("jet"), aspect='auto', interpolation='none')
